@@ -1,0 +1,30 @@
+name: Subvert Substrate FRAME
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_call:
+    secrets:
+      SUBVERT_TOKEN:
+        required: true
+
+jobs:
+  subvert-substrate:
+    name: Publish to subversive-upstream/polkadot-sdk-substrate-frame subrepo
+    runs-on: ubuntu-latest
+    environment: Release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+        with:
+          fetch-depth: '0'
+      - uses: cucumber/action-publish-subrepo@main
+        id: subvert-substrate-frame
+        continue-on-error: true
+        with:
+          working-directory: frame
+          github-token: ${{ secrets.SUBVERT_TOKEN }}
+          create-subrepo-if-missing: true
